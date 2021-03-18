@@ -5,29 +5,6 @@
 import XCTest
 import FeedStoreChallenge
 
-final class MemoryFeedStore: FeedStore {
-	
-	var feedCache: ([LocalFeedImage], Date) = ([], Date())
-	
-	func deleteCachedFeed(completion: @escaping DeletionCompletion) {
-		feedCache = ([], Date())
-		completion(.none)
-	}
-	
-	func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
-		feedCache = (feed, timestamp)
-		completion(nil)
-	}
-	
-	func retrieve(completion: @escaping RetrievalCompletion) {
-		if feedCache.0.isEmpty {
-			completion(.empty)
-		} else {
-			completion(.found(feed: feedCache.0, timestamp: feedCache.1))
-		}
-	}
-}
-
 class FeedStoreChallengeTests: XCTestCase, FeedStoreSpecs {
 	
 	//  ***********************
