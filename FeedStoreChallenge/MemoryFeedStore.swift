@@ -25,10 +25,11 @@ public final class MemoryFeedStore: FeedStore {
 	}
 	
 	public func retrieve(completion: @escaping RetrievalCompletion) {
-		if feedCache.0.isEmpty {
+		let (cachedFeeed, timestamp) = (feedCache.0, feedCache.1)
+		if cachedFeeed.isEmpty {
 			completion(.empty)
 		} else {
-			completion(.found(feed: feedCache.0, timestamp: feedCache.1))
+			completion(.found(feed: cachedFeeed, timestamp: timestamp))
 		}
 	}
 }
