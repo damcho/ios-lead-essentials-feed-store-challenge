@@ -10,26 +10,25 @@ import Foundation
 
 public final class MemoryFeedStore: FeedStore {
 	
-	private var feedCache: ([LocalFeedImage], Date) = ([], Date())
+	private var cache: (feed: [LocalFeedImage],timestamp:  Date)?
 	
 	public init() {}
 	
 	public func deleteCachedFeed(completion: @escaping DeletionCompletion) {
-		feedCache = ([], Date())
+		cache = nil
 		completion(.none)
 	}
 	
 	public func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
-		feedCache = (feed, timestamp)
+		cache = (feed, timestamp)
 		completion(nil)
 	}
 	
 	public func retrieve(completion: @escaping RetrievalCompletion) {
-		let (cachedFeeed, timestamp) = (feedCache.0, feedCache.1)
-		if cachedFeeed.isEmpty {
+		guard let cacheFeed = cache else {
 			completion(.empty)
-		} else {
-			completion(.found(feed: cachedFeeed, timestamp: timestamp))
+			return
 		}
+		completion(.found(feed: cacheFeed.feed, timestamp: cacheFeed.timestamp))
 	}
 }
